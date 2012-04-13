@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>
+    </title>
+    <style>
+
+		h2, label, p {
+			font-family: Helvetica,Arial,sans-serif;
+			color: #333;
+			text-shadow: 0 1px 0 white;
+		}
+		h2 {
+			margin-top: 5px;
+		}
+		a {
+			margin-left: 20px;
+			font-size: 30px;
+		}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
+    </script>
+
+</head>
+<body>
+    <div id="get_name" class="page" style="display:none">
+        <div>
+            <h2>
+                Magic The Gathering
+            </h2>
+            <div>
+				<p>
+                <label for="nameInput">
+                    Enter your name
+                </label>
+				</p>
+				<p>
+                <input id="nameInput" placeholder="" value="" type="text" />
+				</p>
+	            <button id="save">Save</button>
+            </div>
+        </div>
+    </div>
+	<div id="play" style="display:none" class="page">
+        <div>
+			<span id="name"></span>
+            <h2>
+                Life: <span id="life">20</span><br/><a id="life_plus">+</a><a id="life_minus">-</a>
+				<br/><br/>
+				Poisons: <span id="poison">0</span><br/><a id="poison_plus">+</a><a id="poison_minus">-</a>
+            </h2>
+		</div>
+		<div id="others"></div>
+	</div>
+	
+	 <script src="/socket.io/socket.io.js"></script>
+	 <script>
+	
+		function update() {
+			socket.emit('update',{name : name, life : life, poison : poison});
+		}
+	
+		var name = "";
+		var life = 20;
+		var poison = 0;
+		
+		var socket;
+		$("#save").bind("click", function (event){
+			if ($("#nameInput").val() != "") {
+				if (name != "") {
+					socket.emit('remove',name);
+				}
+				name = $("#nameInput").val();
+				localStorage.setItem("name", name);
+				socket.emit('join',{name:name});
+				$("#name").text("[" + name + "]");
+			}
+			$("#get_name").hide();
+			$("#play").show();
+		});
+		$("#life_plus").bind("click", function(event) {
+			life = life + 1;
+			$("#life").text(life);
+			update();
+		})
+		$("#life_minus").bind("click", function(event) {
+			life = life - 1;
+			$("#life").text(parseInt($("#life").text()) - 1);			
+			update();
+		})
+		$("#poison_plus").bind("click", function(event) {
+			poison = poison + 1;
+			$("#poison").text(poison);
+			update();
+		})
+		$("#poison_minus").bind("click", function(event) {
+			poison = poison - 1;
+			$("#poison").text(poison);
+			update();
+		})
+		$("#name").bind("click", function(event) {
+			$("#play").hide()
+			$("#get_name").show()
+		})
+		
+	 </script>
+	 <script>
+			socket = io.connect('http://' + window.location.hostname);
+			
+			var name = localStorage.getItem("name");
+			if (name == "null" || name == null) {
+				$("#get_name").show();
+			} else {
+				$("#name").text("[" + name + "]");
+				console.log('emitting, right?')
+				socket.emit('join',{name:name});
+				$("#play").show();
+				
+			}
+			
+			socket.on('new', function(data) {
+				console.log(data)
+				$("#others").empty();
+				for (eIdx in data.players) {
+					var player = data.players[eIdx];
+					if (player.name != name) {
+						$("#others").append($("<p>").attr("id",player.name.replace(" ","")).
+												      append(player.name + " : " + player.life + " / " + player.poison));	
+					}
+				}
+			}) 
+			socket.on('update', function(data) {
+				player = data.player
+				$("#" + player.name.replace(" ","")).empty().append(player.name + " : " + player.life + " / " + player.poison);
+			})
+	</script>
+	
+</body>
+</html>
