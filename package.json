@@ -1,0 +1,13 @@
+{
+  "name": "lifeismagic",
+  "version": "0.1.0",
+  "description": "Magic: The Gathering health and poison counter",
+  "author": "Jim Geiser",
+  "dependencies": {
+    "express": ">= 2.5.9",
+    "socket.io": ">= 0.9.5"
+  },
+  "contributors": {
+	"name": "Chris Shoff"
+  }
+}
