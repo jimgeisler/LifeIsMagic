@@ -2,7 +2,9 @@ var express = require('express'),
     players = require('./players.js'),
     app = express.createServer(),
     io = require('socket.io').listen(app);
-    
+   
+app.use(express.static(__dirname + '/public'));
+ 
 app.listen(3000);
 
 app.get('/', function (req, res) {

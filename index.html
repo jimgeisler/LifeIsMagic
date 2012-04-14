@@ -5,23 +5,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<link href='http://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
+	<link href='/css/style.css' rel='stylesheet' type='text/css'>
     <title>
     </title>
-    <style>
-
-		h2, label, p {
-			font-family: Helvetica,Arial,sans-serif;
-			color: #333;
-			text-shadow: 0 1px 0 white;
-		}
-		h2 {
-			margin-top: 5px;
-		}
-		a {
-			margin-left: 20px;
-			font-size: 30px;
-		}
-    </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
     </script>
 
@@ -29,37 +16,46 @@
 <body>
     <div id="get_name" class="page" style="display:none">
         <div>
-            <h2>
-                Magic The Gathering
-            </h2>
-            <div>
+            <h1>LIFEIS<strong>MAGIC</strong></h1>
+            <div class="name_enter">
+				<label for="nameInput">enter your name</label>
 				<p>
-                <label for="nameInput">
-                    Enter your name
-                </label>
+                <input id="nameInput" value="" type="text" />
 				</p>
-				<p>
-                <input id="nameInput" placeholder="" value="" type="text" />
-				</p>
-	            <button id="save">Save</button>
+	            <button id="save">SAVE</button>
             </div>
         </div>
     </div>
 	<div id="play" style="display:none" class="page">
-        <div>
-			<span id="name"></span>
-            <h2>
-                Life: <span id="life">20</span><br/><a id="life_plus">+</a><a id="life_minus">-</a>
-				<br/><br/>
-				Poisons: <span id="poison">0</span><br/><a id="poison_plus">+</a><a id="poison_minus">-</a>
-            </h2>
+		<h1>LIFEIS<strong>MAGIC</strong></h1>
+		<div id="name"></div>
+        <div class="player_stats">
+			<div class="stat">
+				<div class="icon">
+					<img src="/images/heart.png" />
+				</div>
+				<div class="counter">
+					<div id="life_minus" class="button">-</div><div id="life" class="value">20</div><div id="life_plus" class="button">+</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="stat">
+				<div class="icon">
+					<img src="/images/skull.png" />
+				</div>
+				<div class="counter">
+					<div id="poison_minus" class="button">-</div><div id="poison" class="value">0</div><div id="poison_plus" class="button">+</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
 		</div>
 		<div id="others"></div>
 	</div>
 	
 	 <script src="/socket.io/socket.io.js"></script>
 	 <script>
-	
 		function update() {
 			socket.emit('update',{name : name, life : life, poison : poison});
 		}
@@ -77,27 +73,31 @@
 				name = $("#nameInput").val();
 				localStorage.setItem("name", name);
 				socket.emit('join',{name:name});
-				$("#name").text("[" + name + "]");
+				$("#name").text(name);
 			}
 			$("#get_name").hide();
 			$("#play").show();
 		});
-		$("#life_plus").bind("click", function(event) {
+		$("#life_plus").bind("touchstart click", function(event) {
+			if (event.type === "touchstart") { $(this).unbind("click"); }
 			life = life + 1;
 			$("#life").text(life);
 			update();
 		})
-		$("#life_minus").bind("click", function(event) {
+		$("#life_minus").bind("touchstart click", function(event) {
+			if (event.type === "touchstart") { $(this).unbind("click"); }
 			life = life - 1;
 			$("#life").text(parseInt($("#life").text()) - 1);			
 			update();
 		})
-		$("#poison_plus").bind("click", function(event) {
+		$("#poison_plus").bind("touchstart click", function(event) {
+			if (event.type === "touchstart") { $(this).unbind("click"); }
 			poison = poison + 1;
 			$("#poison").text(poison);
 			update();
 		})
-		$("#poison_minus").bind("click", function(event) {
+		$("#poison_minus").bind("touchstart click", function(event) {
+			if (event.type === "touchstart") { $(this).unbind("click"); }
 			poison = poison - 1;
 			$("#poison").text(poison);
 			update();
@@ -115,7 +115,7 @@
 			if (name == "null" || name == null) {
 				$("#get_name").show();
 			} else {
-				$("#name").text("[" + name + "]");
+				$("#name").text(name);
 				console.log('emitting, right?')
 				socket.emit('join',{name:name});
 				$("#play").show();
@@ -128,14 +128,24 @@
 				for (eIdx in data.players) {
 					var player = data.players[eIdx];
 					if (player.name != name) {
-						$("#others").append($("<p>").attr("id",player.name.replace(" ","")).
-												      append(player.name + " : " + player.life + " / " + player.poison));	
+						$("#others").append($("<div>").attr("id",player.name.replace(" ","")).attr("class", "other").
+							append("<div class='other_name'>" + player.name + "</div><div class='other_stats'><img src='/images/heart.png' /><span class='other_life'>" + player.life + "</span><img src='/images/skull.png' /><span class='other_poison'>" + player.poison + "</span></div>"));	
 					}
 				}
 			}) 
 			socket.on('update', function(data) {
 				player = data.player
-				$("#" + player.name.replace(" ","")).empty().append(player.name + " : " + player.life + " / " + player.poison);
+				var player_element = $('#' + player.name.replace(" ", ""));
+				player_element.find('.other_life').empty().append(player.life);
+				player_element.find('.other_poison').empty().append(player.poison);
+				
+				if (player.life >= 10 && player.poison <= 6) {
+					player_element.removeClass("warn").removeClass("dead");
+				} else if (player.life > 0 && player.poison < 10) {
+					player_element.addClass("warn").removeClass("dead");
+				} else {
+					player_element.addClass("dead");
+				}
 			})
 	</script>
 	

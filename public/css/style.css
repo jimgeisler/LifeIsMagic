@@ -1,0 +1,48 @@
+html body { margin:0px; padding:0px; background-color:#5d381e; font-family: 'Oswald', sans-serif; color:#fff; }
+
+h1 { font-family: 'Oswald', sans-serif; margin:5px; padding:0px; color:#fff; }
+h1 strong { color:#af9d90; }
+
+.player_stats { background-color:#6b4225; padding:10px 0px; }
+.player_stats img { height:60px; }
+.icon { float:left; width:90px; }
+.stat { margin:10px 20px; }
+.counter { float:left; height:50px; margin:10px; }
+.counter div { float:left; }
+
+.other { margin:10px; float:left; }
+.other_stats { font-size:22px; background-color:#6b4225; width:130px; }
+.warn .other_stats { background-color:#8c3d30; }
+.dead .other_stats { background-color:#000; }
+.dead .other_name { color:#000; }
+.other_stats img { height:18px; margin:0px 10px 0px 10px; }
+
+.button { background-color:#492f16; height:100%; width:50px; text-align:center; font-size:60px; line-height:30px; cursor:pointer; 
+	-moz-user-select: none; 
+	-khtml-user-select: none; 
+	-webkit-user-select: none; 
+	-o-user-select: none;
+}
+.value { width:70px; font-size:40px; line-height:50px; text-align:center; }
+
+.clear { clear:both; }
+
+#name { margin-left:10px; margin-top:20px; font-size:24px; }
+
+.name_enter { margin-left:10px; margin-top:20px; }
+.name_enter label { color:#fff; font-size:25px; font-family:"Oswald", sans-serif; }
+#nameInput { background-color:#af9d90; color:#492f16; font-size:24px; padding:5px; font-family:"Oswald", sans-serif; border:0px; margin-top:-2px; }
+#save { background-color:#af9d90; font-size:24px; color:#fff; font-family:"Oswald", sans-serif; padding:10px; width:100px; border:0px; }
+
+h2, label, p {
+	font-family: Helvetica,Arial,sans-serif;
+	color: #333;
+	text-shadow: 0 1px 0 white;
+}
+h2 {
+	margin-top: 5px;
+}
+a {
+	margin-left: 20px;
+	font-size: 30px;
+}
