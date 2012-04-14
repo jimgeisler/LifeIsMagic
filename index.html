@@ -138,6 +138,12 @@
 				var player_element = $('#' + player.name.replace(" ", ""));
 				player_element.find('.other_life').empty().append(player.life);
 				player_element.find('.other_poison').empty().append(player.poison);
+				
+				if (player.life < 10 || player.poison > 6) {
+					player_element.find('.other_stats').addClass("warn");
+				} else {
+					player_element.find('.other_stats').removeClass("warn")
+				}
 			})
 	</script>
 	
