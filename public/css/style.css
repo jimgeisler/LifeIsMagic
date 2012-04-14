@@ -12,7 +12,9 @@ h1 strong { color:#af9d90; }
 
 .other { margin:10px; float:left; }
 .other_stats { font-size:22px; background-color:#6b4225; width:130px; }
-.warn { background-color:#8c3d30; }
+.warn .other_stats { background-color:#8c3d30; }
+.dead .other_stats { background-color:#000; }
+.dead .other_name { color:#000; }
 .other_stats img { height:18px; margin:0px 10px 0px 10px; }
 
 .button { background-color:#492f16; height:100%; width:50px; text-align:center; font-size:60px; line-height:30px; cursor:pointer; 
@@ -20,7 +22,7 @@ h1 strong { color:#af9d90; }
 	-khtml-user-select: none; 
 	-webkit-user-select: none; 
 	-o-user-select: none;
-	}
+}
 .value { width:70px; font-size:40px; line-height:50px; text-align:center; }
 
 .clear { clear:both; }
